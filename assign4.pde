@@ -112,7 +112,7 @@ void draw() {
         }
       }
       for(k=1;k<=8;k++){
-      println(k +" "+ ifboom[k]+"    "+ boomx[k]);}
+      //println(k +" "+ ifboom[k]+"    "+ boomx[k]);}
        //enemy wave
       if(i==1){
       for(int j=1; j<=5;j++){        //enemyC
@@ -120,7 +120,7 @@ void draw() {
         if(fx > ex[i][j]-50 && fx < ex[i][j]+50){
         if(fy > ey[i][j]-50 && fy < ey[i][j]+50){
             if(enemyshowup[i][j]==true){
-             hp-=4;
+             hp-=40;
              enemyshowup[i][j]=false;
              ifboom[bn]=true;
              boomx[bn] = ex[i][j];
@@ -178,7 +178,7 @@ void draw() {
         if(fx > ex[i][j]-50 && fx < ex[i][j]+50){
         if(fy > ey[i][j]-50 && fy < ey[i][j]+50){
             if(enemyshowup[i][j]==true){
-             hp-=4;
+             hp-=40;
              enemyshowup[i][j]=false;
              ifboom[bn]=true;
              boomx[bn] = ex[i][j];
@@ -272,7 +272,7 @@ void draw() {
         if(fx > ex[i][j]-50 && fx < ex[i][j]+50){
         if(fy > ey[i][j]-50 && fy < ey[i][j]+50){
             if(enemyshowup[i][j]==true){
-             hp-=4;
+             hp-=40;
              enemyshowup[i][j]=false;
              ifboom[bn]=true;
              boomx[bn] = ex[i][j];
