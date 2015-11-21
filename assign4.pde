@@ -22,7 +22,7 @@ boolean upPressed = false, downPressed = false, leftPressed = false, rightPresse
 void setup () {
   size(640,480) ;
   background_speed = 0;
-  frameRate(60);
+  frameRate(180);
   bg1 = loadImage("img/bg1.png");
   bg2 = loadImage("img/bg2.png");
   enemy = loadImage("img/enemy.png");
@@ -94,7 +94,7 @@ void draw() {
       for(k=1;k<=8;k++){
         if(ifboom[k]==true){
           image(boom[flamenum[k]],boomx[k],boomy[k]);
-          if(frameCount%6==0){
+          if(frameCount%18==0){
             flamenum[k]++;
             if(flamenum[k]==6){
               flamenum[k] = 1;
