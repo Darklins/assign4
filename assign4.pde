@@ -366,7 +366,7 @@ void draw() {
       
     case GAME_OVER:
       hp = 45;
-      fx= 599;
+      fx= 589;
       fy = random(30,431);
       tx = random(0,599);
       ty = random(30,431);
