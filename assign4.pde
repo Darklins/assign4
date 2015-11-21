@@ -1,12 +1,22 @@
 /* please implement your assign2 code in this file. */
 PImage bg1, bg2, start1, start2, end1, end2;
-PImage enemy, fighter, hpimage, treasure;
+PImage enemy, fighter, hpimage, treasure,shoot;
 float hp, fx, fy, tx, ty;
 float [][] ex = new float [4][10];
 float [][] ey = new float [4][10];
-PImage[] boom = new PImage[6];
+float [] boomx = new float [10];
+float [] boomy = new float [10];
+float [] bullet = new float [6];
+float [] bulletY = new float[6];
+int [] flamenum = new int [10];
+PImage[] boom = new PImage[7];
+Boolean [] ifboom = new Boolean[10];
+Boolean [] boomfinish = new Boolean[10];
+Boolean [][] enemyshowup = new Boolean[4][10];
+Boolean [] bulletshowup = new Boolean[6];
+
 final int GAME_START = 1, GAME_RUN = 2, GAME_OVER = 3;
-int background_speed, state = GAME_START,i,j,k = 1,l = 1,level,standard=-60,s = second();
+int background_speed, state = GAME_START,i,j,k = 1,p = 1,l =1,bn =1,level,standard=-120,s = second();
 boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false;
 
 void setup () {
@@ -23,6 +33,7 @@ void setup () {
   start1 = loadImage("img/start2.png");
   end2 = loadImage("img/end1.png");
   end1 = loadImage("img/end2.png");
+  shoot = loadImage("img/shoot.png");
   for(i=1;i<=5;i++){
    boom[i] =  loadImage("img/flame"+(i)+".png");
   }
@@ -37,11 +48,21 @@ void setup () {
   ey[3][1]= random(200,300); 
   for(i=1;i<=3;i++){
         for(j=1;j<=8;j++){
-          ex[i][j]=-60;
+          ex[i][j]=-120;
           ey[i][j]=ey[i][1];
+          enemyshowup[i][j] = true;
         }
       }
+  for(i =1;i<=5;i++){
+    bulletshowup[i] = false;
+    boomfinish[i] = true;
 }
+  for(i=1;i<=8;i++){
+    ifboom[i] =false;
+    flamenum[i] = 1;
+  }
+}
+  
 void draw() {
 
   switch(state){
@@ -72,85 +93,247 @@ void draw() {
   
       image(treasure,tx,ty);//treasure
       image(fighter,fx,fy);//fighter
-      println(frameCount%120);
+      for(k=1;k<=8;k++){
+        if(ifboom[k]==true){
+          image(boom[flamenum[k]],boomx[k],boomy[k]);
+          if(frameCount%6==0){
+            flamenum[k]++;
+            if(flamenum[k]==6){
+              flamenum[k] = 1;
+              ifboom[k] = false;
+              //boomfinish[k] = true;
+            }
+          }
+        }
+      }
+      for(k = 1;k<=5;k++){
+        if(bulletshowup[k]==true){
+          image(shoot,bullet[k],bulletY[k]);
+        }
+      }
+      for(k=1;k<=8;k++){
+      println(k +" "+ ifboom[k]+"    "+ boomx[k]);}
        //enemy wave
       if(i==1){
       for(int j=1; j<=5;j++){        //enemyC
         ex[i][j+1] = ex[i][j]-90;
         if(fx > ex[i][j]-50 && fx < ex[i][j]+50){
         if(fy > ey[i][j]-50 && fy < ey[i][j]+50){
-        for(k=1;k<=5;k+=0){
-          
-          image(boom[k],ex[i][j],ey[i][j]);  
-        }
-     
-               
-               
-           
-           if(hp < 0){
+            if(enemyshowup[i][j]==true){
+             hp-=4;
+             enemyshowup[i][j]=false;
+             ifboom[bn]=true;
+             boomx[bn] = ex[i][j];
+              boomy[bn] = ey[i][j];
+              bn++;
+              if(bn==6){
+              bn =1;
+              }
+           }
+
+           if(hp <= 5){
              state = GAME_OVER;
            }
-           ey[i][j]=9999;
-           hp-=4;//enemy and hp
+
            continue;
         }
       }
+      for(k=1;k<=5;k++){
+        if(bullet[k] > ex[i][j]-50 && bullet[k] < ex[i][j]+50){
+        if(bulletY[k] > ey[i][j]-50 && bulletY[k] < ey[i][j]+50){
+            if(enemyshowup[i][j]==true&&bulletshowup[k]==true){
+              ifboom[bn]=true;
+              boomx[bn] = ex[i][j];
+              boomy[bn] = ey[i][j];
+              bn++;
+              if(bn==9){
+                bn =1;
+              }
+              enemyshowup[i][j]=false;
+              bulletshowup[k]=false;
+           }     
+           continue;
+        }
+      }
+      }
+        if(enemyshowup[i][j]==true){
         image(enemy,ex[i][j],ey[i][j]);
+        }
          if(ex[i][1] == 1000){
-           i = 1;
-           ex[i][1] = -60;
+           ex[i][1] = -120;
            ey[i][1] = random(90,410);
            for(j=1;j<=5;j++){
              ey[i][j] = ey[i][1];
+             enemyshowup[i][j]=true;
            }
+           i = 2;
            break;
          }
       }
      }
-     /*
-      else if(i==2){        //enemyB
-      for(int j=1; j<=5;j++){
-         image(enemy,ex- j *60,ey_b+j*60);
-          if(ex == 960){
+     else if(i==2){
+      for(int j=1; j<=5;j++){        //enemyB
+        ex[i][j+1] = ex[i][j]-50;
+        ey[i][j+1] = ey[i][j]+50;
+        if(fx > ex[i][j]-50 && fx < ex[i][j]+50){
+        if(fy > ey[i][j]-50 && fy < ey[i][j]+50){
+            if(enemyshowup[i][j]==true){
+             hp-=4;
+             enemyshowup[i][j]=false;
+             ifboom[bn]=true;
+             boomx[bn] = ex[i][j];
+              boomy[bn] = ey[i][j];
+              bn++;
+              if(bn==6){
+              bn =1;
+              }
+           }
+     
+           if(hp <= 5){
+             state = GAME_OVER;
+           }
+            continue;
+        }
+      }
+      for(k=1;k<=5;k++){
+        if(bullet[k] > ex[i][j]-50 && bullet[k] < ex[i][j]+50){
+        if(bulletY[k] > ey[i][j]-50 && bulletY[k] < ey[i][j]+50){
+            if(enemyshowup[i][j]==true&&bulletshowup[k]==true){
+              ifboom[bn]=true;
+              boomx[bn] = ex[i][j];
+              boomy[bn] = ey[i][j];
+              bn++;
+              if(bn==9){
+                bn =1;
+              }
+              enemyshowup[i][j]=false;
+              bulletshowup[k]=false;
+           }     
+           continue;
+        }
+      }
+      }
+        if(enemyshowup[i][j]==true){
+        image(enemy,ex[i][j],ey[i][j]);
+        }
+         if(ex[i][1] == 1000){
+           ex[i][1] = -120;
+           ey[i][1] = random(90,120);
+           for(j=1;j<=8;j++){
+             enemyshowup[i][j]=true;
+           }
            i = 3;
-           ex = 0;
-           ey_b = random(30,120); 
            break;
          }
       }
-      }
-      else{        //enemyA
-        for(int j= 1; j<6; j++){
-          if(j==2||j==4)
-            level = 1;
-          else if(j==3)
-            level = 2;
-          else
-            level = 3;
-           
-          if(level==2||level==1){
-            image(enemy,ex- j *60,ey_a+level*60);
-            image(enemy,ex- j *60,ey_a-level*60);
-          }
-          else
-            image(enemy,ex-(j%6)*60,ey_a);
-          if(ex == 960){
-             i = 1;
-             ex = 0;
-             ey_a = random(200,300); 
-             break;
-          }  
+     }
+     else if(i==3) {
+      for(int j=1; j<=8;j++){        //enemyA
+        //ex[i][j+1] = ex[i][j]-50;
+        //ey[i][j+1] = ey[i][j]+50;
+    
+            if(j==2){
+               ex[i][j] = ex[i][1] - 50;
+               ey[i][j] = ey[i][1] - 50;
+            }
+            if(j==3){
+               ex[i][j] = ex[i][1] - 50;
+               ey[i][j] = ey[i][1] + 50;
+            }
+            if(j==6){
+               ex[i][j] = ex[i][1] - 150;
+               ey[i][j] = ey[i][1] - 50;
+            }
+            if(j==7){
+               ex[i][j] = ex[i][1] - 150;
+               ey[i][j] = ey[i][1] + 50;
+            }
+         
+        
+            if(j==4){
+               ex[i][j] = ex[i][1] - 100;
+               ey[i][j] = ey[i][1] - 100;
+            }
+            if(j==5){
+               ex[i][j] = ex[i][1] - 100;
+               ey[i][j] = ey[i][1] + 100;
+            }
+          
+          
+            if(j==1){
+               ex[i][j] = ex[i][1] ;
+               ey[i][j] = ey[i][1] ;
+            }
+            if(j==8){
+               ex[i][j] = ex[i][1] - 200;
+               ey[i][j] = ey[i][1];
+            }
+          
+        if(fx > ex[i][j]-50 && fx < ex[i][j]+50){
+        if(fy > ey[i][j]-50 && fy < ey[i][j]+50){
+            if(enemyshowup[i][j]==true){
+             hp-=4;
+             enemyshowup[i][j]=false;
+             ifboom[bn]=true;
+             boomx[bn] = ex[i][j];
+              boomy[bn] = ey[i][j];
+              bn++;
+              if(bn==9){
+              bn =1;
+              }
+           }
+     
+           if(hp <= 5){
+             state = GAME_OVER;
+           }
+            continue;
         }
-      }*/
+      }
+      for(k=1;k<=5;k++){
+        if(bullet[k] > ex[i][j]-50 && bullet[k] < ex[i][j]+50){
+        if(bulletY[k] > ey[i][j]-50 && bulletY[k] < ey[i][j]+50){
+            if(enemyshowup[i][j]==true&&bulletshowup[k]==true){
+              ifboom[bn]=true;
+              boomx[bn] = ex[i][j];
+              boomy[bn] = ey[i][j];
+              bn++;
+              if(bn==9){
+                bn =1;
+              }
+              enemyshowup[i][j]=false;
+              bulletshowup[k]=false;
+           }     
+     
+           continue;
+        }
+      }
+      }
+       
+        if(enemyshowup[i][j]==true){
+          //println(ey[i][j]);
+          image(enemy,ex[i][j],ey[i][j]);
+        }
+         if(ex[i][1] == 1000){
+           ex[i][1] = -120;
+           ey[i][1] = random(200,300);
+           for(j=1;j<=8;j++){
+             enemyshowup[i][j]=true;
+           }
+           i = 1;
+           break;
+         }
+      }
+     }
       
       
       for(j=1;j<=8;j++)
       {
         ex[i][j]+=4;
       }
-      standard+=4;
-      if(standard==1000){
-      standard = -60;
+      for(j=1;j<=5;j++){
+        bullet[j]-=4;
+        if(bullet[j] < -32)
+          bulletshowup[j] = false;
       }
       background_speed++;
       
@@ -192,7 +375,7 @@ void draw() {
       
     case GAME_OVER:
       hp = 45;
-      fx= random(0,599);
+      fx= 599;
       fy = random(30,431);
       tx = random(0,599);
       ty = random(30,431);
@@ -201,8 +384,11 @@ void draw() {
       ey[3][1]= random(200,300); 
       for(i=1;i<=3;i++){
         for(j=1;j<=8;j++){
-          ex[i][j]=-60;
+          ex[i][j]=-120;
           ey[i][j]=ey[i][1];
+          enemyshowup[i][j] = true;
+          ifboom[j] = false;
+          boomfinish[j] = true;
         }
       }
       image(end1,0,0);//end1
@@ -220,6 +406,16 @@ void draw() {
 
 }
 void keyPressed(){
+  if(key==' '){
+       if(bullet[p]<0){
+       bulletshowup[p] = true;
+       bullet[p]= fx-30;
+       bulletY[p] = fy;
+       p++;
+       if(p==6)
+         p=1;
+       }
+    }
   if(key == CODED){
     switch(keyCode){
       case UP:
@@ -234,6 +430,8 @@ void keyPressed(){
       case RIGHT:
         rightPressed = true;
       break;
+      
+        
     }
   }
 }
