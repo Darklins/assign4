@@ -380,6 +380,7 @@ void draw() {
           enemyshowup[i][j] = true;
           ifboom[j] = false;
           boomfinish[j] = true;
+          bulletshowup[j]=false;
         }
       }
       image(end1,0,0);//end1
