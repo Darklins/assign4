@@ -55,7 +55,6 @@ void setup () {
       }
   for(i =1;i<=5;i++){
     bulletshowup[i] = false;
-    boomfinish[i] = true;
 }
   for(i=1;i<=8;i++){
     ifboom[i] =false;
@@ -84,7 +83,6 @@ void draw() {
       //background;
       image(bg2,-640 + (background_speed+640) % 1280,0);
       image(bg1,-640 + background_speed % 1280,0);
-      //image(boom[1],250,250);
   
       //hp
       fill(256,0,0);
@@ -101,7 +99,6 @@ void draw() {
             if(flamenum[k]==6){
               flamenum[k] = 1;
               ifboom[k] = false;
-              //boomfinish[k] = true;
             }
           }
         }
@@ -112,7 +109,7 @@ void draw() {
         }
       }
       for(k=1;k<=8;k++){
-      //println(k +" "+ ifboom[k]+"    "+ boomx[k]);}
+      println(k +" "+ ifboom[k]+"    "+ boomx[k]);}
        //enemy wave
       if(i==1){
       for(int j=1; j<=5;j++){        //enemyC
@@ -229,42 +226,39 @@ void draw() {
      }
      else if(i==3) {
       for(int j=1; j<=8;j++){        //enemyA
-        //ex[i][j+1] = ex[i][j]-50;
-        //ey[i][j+1] = ey[i][j]+50;
-    
             if(j==2){
                ex[i][j] = ex[i][1] - 50;
                ey[i][j] = ey[i][1] - 50;
             }
-            if(j==3){
+            else if(j==3){
                ex[i][j] = ex[i][1] - 50;
                ey[i][j] = ey[i][1] + 50;
             }
-            if(j==6){
+            else if(j==6){
                ex[i][j] = ex[i][1] - 150;
                ey[i][j] = ey[i][1] - 50;
             }
-            if(j==7){
+            else if(j==7){
                ex[i][j] = ex[i][1] - 150;
                ey[i][j] = ey[i][1] + 50;
             }
          
         
-            if(j==4){
+            else if(j==4){
                ex[i][j] = ex[i][1] - 100;
                ey[i][j] = ey[i][1] - 100;
             }
-            if(j==5){
+            else if(j==5){
                ex[i][j] = ex[i][1] - 100;
                ey[i][j] = ey[i][1] + 100;
             }
           
           
-            if(j==1){
+            else if(j==1){
                ex[i][j] = ex[i][1] ;
                ey[i][j] = ey[i][1] ;
             }
-            if(j==8){
+            else if(j==8){
                ex[i][j] = ex[i][1] - 200;
                ey[i][j] = ey[i][1];
             }
@@ -310,7 +304,6 @@ void draw() {
       }
        
         if(enemyshowup[i][j]==true){
-          //println(ey[i][j]);
           image(enemy,ex[i][j],ey[i][j]);
         }
          if(ex[i][1] == 1000){
